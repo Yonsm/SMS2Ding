@@ -29,15 +29,11 @@ public class SMSListener extends BroadcastReceiver {
                     body.append(message.getDisplayMessageBody());
                 }
 
-                String text = body.toString() + "[" + senderNumber + "]";
-                startSmsService(context, text);
+                Intent serviceIntent = new Intent(context, DingTalkService.class);
+                serviceIntent.putExtra(Constant.DingTalk_Message, body.toString());
+                serviceIntent.putExtra(Constant.DingTalk_From, senderNumber);
+                context.startService(serviceIntent);
             }
         }
-    }
-
-    private void startSmsService(Context context, String message) {
-        Intent serviceIntent = new Intent(context, FilterService.class);
-        serviceIntent.putExtra(Constant.DingTalk_Message, message);
-        context.startService(serviceIntent);
     }
 }

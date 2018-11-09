@@ -39,9 +39,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             if (state == TelephonyManager.CALL_STATE_RINGING) {
-                String currentToken = preference.getDingTalkToken();
                 Intent serviceIntent = new Intent(getBaseContext(), DingTalkService.class);
-                serviceIntent.putExtra(Constant.DingTalk_Token, currentToken);
                 serviceIntent.putExtra(Constant.DingTalk_Message, "呼叫");
                 serviceIntent.putExtra(Constant.DingTalk_From, incomingNumber);
                 startService(serviceIntent);

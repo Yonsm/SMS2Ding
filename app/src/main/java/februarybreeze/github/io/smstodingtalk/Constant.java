@@ -1,4 +1,4 @@
-package februarybreeze.github.io.smstodingtalk;
+package net.yonsm.SMS2Ding;
 
 public class Constant {
     public static final String SETTING_FILE_NAME = "sms_to_ding_talk.conf";

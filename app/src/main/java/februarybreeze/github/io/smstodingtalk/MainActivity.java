@@ -1,4 +1,4 @@
-package februarybreeze.github.io.smstodingtalk;
+package net.yonsm.SMS2Ding;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

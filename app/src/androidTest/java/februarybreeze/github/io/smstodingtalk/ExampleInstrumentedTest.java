@@ -1,4 +1,4 @@
-package februarybreeze.github.io.smstodingtalk;
+package net.yonsm.SMS2Ding;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("februarybreeze.github.io.smstodingtalk", appContext.getPackageName());
+        assertEquals("net.yonsm.SMS2Ding", appContext.getPackageName());
     }
 }

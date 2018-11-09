@@ -7,10 +7,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.telephony.TelephonyManager;
+import android.telephony.PhoneStateListener;
 
 
 public class MainActivity extends AppCompatActivity {
     private Preferences preference;
+    TelephonyManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         startService(new Intent(getBaseContext(), MainService.class));
+
+        manager = (TelephonyManager) this.getSystemService(TELEPHONY_SERVICE);
+        manager.listen(new MyPhoneStateListener(), PhoneStateListener.LISTEN_CALL_STATE);
+    }
+
+    class MyPhoneStateListener extends PhoneStateListener {
+
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            switch (state) {
+                case TelephonyManager.CALL_STATE_IDLE:
+                    break;
+                case TelephonyManager.CALL_STATE_RINGING:
+
+                    String message = "来电号码：" + incomingNumber;
+
+                    String currentToken;
+                    currentToken = preference.getDingTalkNotNoticedToken();
+
+                    Intent serviceIntent = new Intent(getBaseContext(), DingTalkService.class);
+                    serviceIntent.putExtra(Constant.Current_Ding_Talk_Token, currentToken);
+                    serviceIntent.putExtra(Constant.SMS_Message, message);
+                    startService(serviceIntent);
+                    break;
+                case TelephonyManager.CALL_STATE_OFFHOOK:
+                    break;
+                default:
+                    break;
+            }
+
+            super.onCallStateChanged(state, incomingNumber);
+        }
     }
 
     public void setDingTalkNoticedToken(View view) {

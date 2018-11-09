@@ -11,10 +11,10 @@ public class Preferences {
     }
 
     public String getDingTalkToken() {
-        return mPreference.getString(Constant.DingTalk_Preference_Token, "");
+        return mPreference.getString(Constant.DingTalk_Token, "");
     }
 
     public void setDingTalkToken(String token) {
-        mPreference.edit().putString(Constant.DingTalk_Preference_Token, token).apply();
+        mPreference.edit().putString(Constant.DingTalk_Token, token).apply();
     }
 }

@@ -34,9 +34,8 @@ public class DingTalkService extends IntentService {
         }
 
         Preferences preferences = new Preferences(this);
-        String currentToken = preferences.getDingTalkToken();
+        String token = preferences.getDingTalkToken();
 
-        String token = intent.getStringExtra(Constant.DingTalk_Token);
         String message = intent.getStringExtra(Constant.DingTalk_Message);
         String from = intent.getStringExtra(Constant.DingTalk_From);
         sendMessage(token, message, from);

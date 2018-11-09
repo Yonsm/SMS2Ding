@@ -1,12 +1,12 @@
 package net.yonsm.SMS2Ding;
 
 public class Constant {
-    public static final String SETTING_FILE_NAME = "sms_to_ding_talk.conf";
+    public static final String SETTING_FILE_NAME = "sms2ding.conf";
 
-    public static final String Current_Ding_Talk_Token = "current_ding_talk_token";
-    public static final String Ding_Talk_Noticed_Robot_Token = "ding_talk_noticed_token";
-    public static final String Ding_Talk_Not_Noticed_Robot_Token = "ding_talk_not_noticed_token";
-    public static final String Ding_Talk_Robot_Url = "https://oapi.dingtalk.com/robot/send?access_token=";
+    public static final String DingTalk_Preference_Token = "DingTalk_Preference_Token";
+    public static final String DingTalk_Robot_Url = "https://oapi.dingtalk.com/robot/send?access_token=";
 
-    public static final String SMS_Message = "sms_message";
+    public static final String DingTalk_Token = "DingTalk_Token";
+    public static final String DingTalk_Message = "DingTalk_Message";
+    public static final String DingTalk_From = "DingTalk_From";
 }

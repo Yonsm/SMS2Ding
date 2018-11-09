@@ -21,19 +21,14 @@ public class FilterService extends IntentService {
             return;
         }
 
-        String message = intent.getStringExtra(Constant.SMS_Message);
+        String message = intent.getStringExtra(Constant.DingTalk_Message);
         Preferences preferences = new Preferences(this);
 
-        String currentToken;
-        if (isSpamMessage(message)) {
-            currentToken = preferences.getDingTalkNotNoticedToken();
-        } else {
-            currentToken = preferences.getDingTalkNoticedToken();
-        }
+        String currentToken = preferences.getDingTalkToken();
 
         Intent serviceIntent = new Intent(this.getApplicationContext(), DingTalkService.class);
-        serviceIntent.putExtra(Constant.Current_Ding_Talk_Token, currentToken);
-        serviceIntent.putExtra(Constant.SMS_Message, message);
+        serviceIntent.putExtra(Constant.DingTalk_Token, currentToken);
+        serviceIntent.putExtra(Constant.DingTalk_Message, message);
         this.startService(serviceIntent);
     }
 

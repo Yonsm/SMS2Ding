@@ -14,6 +14,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class DingTalkService extends IntentService {
     public DingTalkService() {
         super("DingTalkService");
@@ -29,12 +33,16 @@ public class DingTalkService extends IntentService {
             return;
         }
 
-        String token = intent.getStringExtra(Constant.Current_Ding_Talk_Token);
-        String message = intent.getStringExtra(Constant.SMS_Message);
-        sendMessage(token, message);
+        Preferences preferences = new Preferences(this);
+        String currentToken = preferences.getDingTalkToken();
+
+        String token = intent.getStringExtra(Constant.DingTalk_Token);
+        String message = intent.getStringExtra(Constant.DingTalk_Message);
+        String from = intent.getStringExtra(Constant.DingTalk_From);
+        sendMessage(token, message, from);
     }
 
-    private void sendMessage(String dingTalkToken, String message) {
+    private void sendMessage(String dingTalkToken, String message, String from) {
         if (TextUtils.isEmpty(dingTalkToken)) {
             return;
         }
@@ -51,7 +59,7 @@ public class DingTalkService extends IntentService {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST,
-                Constant.Ding_Talk_Robot_Url + dingTalkToken,
+                Constant.DingTalk_Robot_Url + dingTalkToken,
                 root,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -66,5 +74,16 @@ public class DingTalkService extends IntentService {
         );
 
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+    }
+
+    private String getDate(long time) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+            Date date = new Date(time);
+            return sdf.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

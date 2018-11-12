@@ -41,24 +41,25 @@ public class DingTalkService extends IntentService {
         sendMessage(token, message, from);
     }
 
-    private void sendMessage(String dingTalkToken, String message, String from) {
-        if (TextUtils.isEmpty(dingTalkToken)) {
+    private void sendMessage(String token, String message, String from) {
+        if (TextUtils.isEmpty(token)) {
             return;
         }
 
         final JSONObject root = new JSONObject();
         try {
-            JSONObject content = new JSONObject();
-            content.put("content", message);
-            root.put("msgtype", "text");
-            root.put("text", content);
+            JSONObject markdown = new JSONObject();
+            markdown.put("title", message);
+            markdown.put("text", ">" + message + "\n\n###### 　来自 **[" + from + "](tel:\" + from + \")** 于 " + getStamp());
+            root.put("msgtype", "markdown");
+            root.put("markdown", markdown);
         } catch (JSONException e) {
             Log.d("DingTalkService", e.toString());
         }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST,
-                Constant.DingTalk_Robot_Url + dingTalkToken,
+                Constant.DingTalk_Robot_Url + token,
                 root,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -75,10 +76,10 @@ public class DingTalkService extends IntentService {
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
     }
 
-    private String getDate(long time) {
+    private String getStamp() {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-            Date date = new Date(time);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            Date date = new Date(System.currentTimeMillis());
             return sdf.format(date);
         } catch (Exception e) {
             e.printStackTrace();

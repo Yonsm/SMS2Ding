@@ -23,8 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
         String noticedToken = preference.getDingTalkToken();
         if (!TextUtils.isEmpty(noticedToken)) {
-            TextView tokenView = (TextView) findViewById(R.id.noticedTokenView);
-            tokenView.setText(noticedToken);
+            //EditText editTex = (EditText) findViewById(R.id.tokenText);
+            //editTex.setText(noticedToken);
+            ;
         }
 
         startService(new Intent(getBaseContext(), MainService.class));
@@ -53,8 +54,5 @@ public class MainActivity extends AppCompatActivity {
         EditText tokenText = (EditText) findViewById(R.id.tokenText);
         String token = tokenText.getText().toString();
         preference.setDingTalkToken(token);
-
-        TextView tokenView = (TextView) findViewById(R.id.noticedTokenView);
-        tokenView.setText(token);
     }
 }

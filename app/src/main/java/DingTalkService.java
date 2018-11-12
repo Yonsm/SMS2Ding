@@ -18,6 +18,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import android.database.Cursor;
+import android.content.Context;
+import android.content.ContentResolver;
+import android.provider.ContactsContract;
+
 public class DingTalkService extends IntentService {
     public DingTalkService() {
         super("DingTalkService");
@@ -50,7 +55,7 @@ public class DingTalkService extends IntentService {
         try {
             JSONObject markdown = new JSONObject();
             markdown.put("title", message);
-            markdown.put("text", ">" + message + "\n\n###### 　来自 **[" + from + "](tel:\" + from + \")** 于 " + getStamp());
+            markdown.put("text", ">" + message + "\n\n###### 　来自 **[" + getName(from) + "](tel:\" + from + \")** 于 " + getStamp());
             root.put("msgtype", "markdown");
             root.put("markdown", markdown);
         } catch (JSONException e) {
@@ -85,5 +90,26 @@ public class DingTalkService extends IntentService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private String getName(String phoneNum) {
+        String contactName = phoneNum;
+        try {
+            ContentResolver cr = getBaseContext().getContentResolver();
+            Cursor pCur = cr.query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                    ContactsContract.CommonDataKinds.Phone.NUMBER + " = ?",
+                    new String[]{phoneNum}, null);
+            if (pCur.moveToFirst()) {
+                contactName = pCur
+                        .getString(pCur
+                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                pCur.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return contactName;
     }
 }

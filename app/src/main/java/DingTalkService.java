@@ -2,6 +2,7 @@ package net.yonsm.SMS2Ding;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.support.annotation.Nullable;
@@ -19,7 +20,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.database.Cursor;
-import android.content.Context;
 import android.content.ContentResolver;
 import android.provider.ContactsContract;
 
@@ -92,20 +92,36 @@ public class DingTalkService extends IntentService {
         }
     }
 
+//    {
+//        ContentResolver cr = getContentResolver();
+//        Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+//        while(cursor.moveToNext())
+//        {
+//            int nameFieldColumnIndex = cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME);
+//            contactName = cursor.getString(nameFieldColumnIndex);
+//
+//            String ContactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+//            Cursor phone = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + ContactId, null, null);
+//            while(phone.moveToNext())
+//            {
+//                String PhoneNumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+//                PhoneNumber = PhoneNumber.replace("-","");
+//                PhoneNumber = PhoneNumber.replace(" ","");
+//            }
+//        }
+//    }
+
     private String getName(String phoneNum) {
         String contactName = phoneNum;
         try {
-            ContentResolver cr = getBaseContext().getContentResolver();
-            Cursor pCur = cr.query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                    ContactsContract.CommonDataKinds.Phone.NUMBER + " = ?",
-                    new String[]{phoneNum}, null);
-            if (pCur.moveToFirst()) {
-                contactName = pCur
-                        .getString(pCur
-                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                pCur.close();
+            ContentResolver contentResolver = getContentResolver();
+            Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNum));
+            String[] projection = { ContactsContract.PhoneLookup.DISPLAY_NAME };
+            Cursor cursor = contentResolver.query(uri, projection, null, null, null);
+            if (cursor.moveToFirst()) {
+                contactName = cursor.getString(0);
             }
+            cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
